@@ -24,6 +24,7 @@ const AppContent = () => {
   const [profileAddress, setProfileAddress] = useState('');
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [newAddress, setNewAddress] = useState('');
+  const [orderSuccess, setOrderSuccess] = useState(false);
 
   useEffect(() => {
     if (user?.address) {
@@ -303,7 +304,7 @@ const AppContent = () => {
                   <span>Total:</span>
                   <span>Rs. {cartTotal}</span>
                 </div>
-                <button className="btn order-btn" onClick={() => { addOrder(cart, cartTotal); clearCart(); setShowCart(false); alert('Order placed!'); }}>Place Order</button>
+                <button className="btn order-btn" onClick={() => { addOrder(cart, cartTotal); clearCart(); setShowCart(false); setOrderSuccess(true); }}>Place Order</button>
               </>
             )}
           </div>
@@ -376,6 +377,17 @@ const AppContent = () => {
               className="address-input"
             />
             <button className="btn" onClick={saveAddress}>Save Address</button>
+          </div>
+        </div>
+      )}
+
+      {orderSuccess && (
+        <div className="modal-overlay" onClick={() => setOrderSuccess(false)}>
+          <div className="modal success-modal" onClick={e => e.stopPropagation()}>
+            <div className="success-icon">✓</div>
+            <h2>Order Placed Successfully!</h2>
+            {/* <p>Your medicines will be delivered soon.</p> */}
+            <button className="btn" onClick={() => setOrderSuccess(false)}>Close</button>
           </div>
         </div>
       )}
