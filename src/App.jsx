@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { AppProvider, useApp } from './context/AppContext';
@@ -21,6 +21,13 @@ const AppContent = () => {
   const [authMode, setAuthMode] = useState('login');
   const [authForm, setAuthForm] = useState({ email: '', password: '', name: '' });
   const [authError, setAuthError] = useState('');
+  const [profileAddress, setProfileAddress] = useState('');
+
+  useEffect(() => {
+    if (user?.address) {
+      setProfileAddress(user.address);
+    }
+  }, [user]);
 
   const filteredPharmacies = useMemo(() => {
     return pharmacies.filter(p => {
@@ -79,6 +86,13 @@ const AppContent = () => {
     }
   };
 
+  const saveProfileAddress = () => {
+    if (!user) return;
+    const updatedUser = { ...user, address: profileAddress };
+    localStorage.setItem('medifinder_user', JSON.stringify(updatedUser));
+    alert('Address saved!');
+  };
+
   return (
     <div className="app-container">
         <Header onCartClick={() => setShowCart(true)} onLoginClick={() => setShowAuth(true)} />
@@ -131,12 +145,45 @@ const AppContent = () => {
           </div>
         )}
 
-        {activeTab !== 'map' && (
+        {activeTab !== 'map' && activeTab !== 'profile' && (
           <PharmacyList 
             pharmacies={displayPharmacies} 
             onSelect={setSelectedPharmacy} 
             userLocation={USER_LOCATION}
           />
+        )}
+
+        {activeTab === 'profile' && (
+          <div className="profile-tab">
+            {user ? (
+              <>
+                <h2>My Profile</h2>
+                <div className="profile-field">
+                  <label>Name:</label>
+                  <p>{user.name}</p>
+                </div>
+                <div className="profile-field">
+                  <label>Email:</label>
+                  <p>{user.email}</p>
+                </div>
+                <div className="profile-field">
+                  <label>Address:</label>
+                  <p>{profileAddress}</p>
+                  {/* <textarea
+                    value={profileAddress}
+                    onChange={(e) => setProfileAddress(e.target.value)}
+                    placeholder="Enter your address..."
+                  /> */}
+                </div>
+                <button className="btn" onClick={saveProfileAddress}>Update Address</button>
+              </>
+            ) : (
+              <div className="login-prompt">
+                <p>Please login to view your profile</p>
+                <button className="btn" onClick={() => setShowAuth(true)}>Login</button>
+              </div>
+            )}
+          </div>
         )}
       </main>
 
@@ -169,6 +216,16 @@ const AppContent = () => {
             <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
           </svg>
           Favorites
+        </button>
+        <button
+          className={`bottom-nav-item ${activeTab === 'profile' ? 'active' : ''}`}
+          onClick={() => setActiveTab('profile')}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          Profile
         </button>
       </nav>
 

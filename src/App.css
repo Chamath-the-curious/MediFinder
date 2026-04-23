@@ -23,6 +23,7 @@ body {
   color: var(--text);
   min-height: 100vh;
   -webkit-tap-highlight-color: transparent;
+  /* padding: 10px 20px; */
 }
 
 .app {
@@ -43,6 +44,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-radius: 10px;
 }
 
 .cart-btn {
@@ -333,6 +335,49 @@ body {
 
 .bottom-nav-item.active {
   color: var(--primary);
+}
+
+.profile-tab {
+  padding: 20px;
+}
+
+.profile-tab h2 {
+  margin-bottom: 24px;
+}
+
+.profile-field {
+  margin-bottom: 16px;
+}
+
+.profile-field label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--text-light);
+}
+
+.profile-field p {
+  font-size: 1rem;
+}
+
+.profile-field textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  min-height: 80px;
+}
+
+.login-prompt {
+  text-align: center;
+  padding: 40px;
+}
+
+.login-prompt p {
+  margin-bottom: 16px;
+  color: var(--text-light);
 }
 
 .nav-pills {
