@@ -22,12 +22,27 @@ const AppContent = () => {
   const [authForm, setAuthForm] = useState({ email: '', password: '', name: '' });
   const [authError, setAuthError] = useState('');
   const [profileAddress, setProfileAddress] = useState('');
+  const [showAddressModal, setShowAddressModal] = useState(false);
+  const [newAddress, setNewAddress] = useState('');
 
   useEffect(() => {
     if (user?.address) {
       setProfileAddress(user.address);
     }
   }, [user]);
+
+  const openAddressModal = () => {
+    setNewAddress(profileAddress);
+    setShowAddressModal(true);
+  };
+
+  const saveAddress = () => {
+    if (!user) return;
+    const updatedUser = { ...user, address: newAddress };
+    localStorage.setItem('medifinder_user', JSON.stringify(updatedUser));
+    setProfileAddress(newAddress);
+    setShowAddressModal(false);
+  };
 
   const filteredPharmacies = useMemo(() => {
     return pharmacies.filter(p => {
@@ -84,13 +99,6 @@ const AppContent = () => {
         setAuthError('Invalid email or password');
       }
     }
-  };
-
-  const saveProfileAddress = () => {
-    if (!user) return;
-    const updatedUser = { ...user, address: profileAddress };
-    localStorage.setItem('medifinder_user', JSON.stringify(updatedUser));
-    alert('Address saved!');
   };
 
   return (
@@ -168,14 +176,9 @@ const AppContent = () => {
                 </div>
                 <div className="profile-field">
                   <label>Address:</label>
-                  <p>{profileAddress}</p>
-                  {/* <textarea
-                    value={profileAddress}
-                    onChange={(e) => setProfileAddress(e.target.value)}
-                    placeholder="Enter your address..."
-                  /> */}
+                  <p>{profileAddress || 'No address saved'}</p>
                 </div>
-                <button className="btn" onClick={saveProfileAddress}>Update Address</button>
+                <button className="btn" onClick={openAddressModal}>Update Address</button>
               </>
             ) : (
               <div className="login-prompt">
@@ -322,6 +325,28 @@ const AppContent = () => {
                 {authMode === 'login' ? 'Register' : 'Login'}
               </button>
             </p>
+          </div>
+        </div>
+      )}
+
+      {showAddressModal && (
+        <div className="modal-overlay" onClick={() => setShowAddressModal(false)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-title">Update Address</div>
+              <button className="close-btn" onClick={() => setShowAddressModal(false)}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M18 6 6 18M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+            <textarea
+              value={newAddress}
+              onChange={(e) => setNewAddress(e.target.value)}
+              placeholder="Enter your address..."
+              className="address-input"
+            />
+            <button className="btn" onClick={saveAddress}>Save Address</button>
           </div>
         </div>
       )}
