@@ -116,10 +116,15 @@ const AppContent = () => {
             <MapContainer center={DEFAULT_CENTER} zoom={13} style={{ height: '100%', width: '100%' }}>
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
               {displayPharmacies.map(p => (
-                <Marker key={p.id} position={[p.lat, p.lon]}>
+                <Marker 
+                  key={p.id} 
+                  position={[p.lat, p.lon]}
+                  eventHandlers={{
+                    click: () => setSelectedPharmacy(p)
+                  }}
+                >
                   <Popup>
-                    <strong>{p.name}</strong><br/>{p.address}
-                  </Popup>
+                    <strong>{p.name}</strong><br/>{p.address}<br/><em>Click for details</em></Popup>
                 </Marker>
               ))}
             </MapContainer>
