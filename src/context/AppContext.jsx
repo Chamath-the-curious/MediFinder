@@ -9,6 +9,7 @@ export const AppProvider = ({ children }) => {
   const [favorites, setFavorites] = useState([]);
   const [cart, setCart] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     const savedToken = localStorage.getItem('medifinder_token');
@@ -27,6 +28,11 @@ export const AppProvider = ({ children }) => {
     if (savedReviews) {
       setReviews(JSON.parse(savedReviews));
     }
+
+    const savedOrders = localStorage.getItem('medifinder_orders');
+    if (savedOrders) {
+      setOrders(JSON.parse(savedOrders));
+    }
   }, []);
 
   useEffect(() => {
@@ -36,6 +42,10 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('medifinder_reviews', JSON.stringify(reviews));
   }, [reviews]);
+
+  useEffect(() => {
+    localStorage.setItem('medifinder_orders', JSON.stringify(orders));
+  }, [orders]);
 
   const login = (userData) => {
     localStorage.setItem('medifinder_token', userData.token);
@@ -90,6 +100,17 @@ export const AppProvider = ({ children }) => {
     setReviews([...reviews, { ...review, id: Date.now() }]);
   };
 
+  const addOrder = (orderItems, total) => {
+    const newOrder = {
+      id: Date.now(),
+      items: orderItems,
+      total,
+      date: new Date().toISOString(),
+      status: 'Processing'
+    };
+    setOrders([...orders, newOrder]);
+  };
+
   const cartTotal = cart.reduce((sum, item) => sum + (item.medicine.price * item.quantity), 0);
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -98,7 +119,8 @@ export const AppProvider = ({ children }) => {
       user, login, logout,
       favorites, toggleFavorite,
       cart, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, cartCount,
-      reviews, addReview
+      reviews, addReview,
+      orders, addOrder
     }}>
       {children}
     </AppContext.Provider>

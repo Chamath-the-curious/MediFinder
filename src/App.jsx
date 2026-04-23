@@ -12,7 +12,7 @@ const DEFAULT_CENTER = [6.9271, 79.8612];
 const USER_LOCATION = [6.9250, 79.8550];
 
 const AppContent = () => {
-  const { favorites, cart, clearCart, cartTotal, login, logout, user } = useApp();
+  const { favorites, cart, clearCart, cartTotal, login, logout, user, addOrder, orders } = useApp();
   const [activeTab, setActiveTab] = useState('search');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPharmacy, setSelectedPharmacy] = useState(null);
@@ -179,6 +179,34 @@ const AppContent = () => {
                   <p>{profileAddress || 'No address saved'}</p>
                 </div>
                 <button className="btn" onClick={openAddressModal}>Update Address</button>
+
+                <div className="orders-section">
+                  <h3>Previous Orders</h3>
+                  {orders.length === 0 ? (
+                    <p className="no-orders">No orders yet</p>
+                  ) : (
+                    <div className="orders-list">
+                      {orders.slice().reverse().map(order => (
+                        <div key={order.id} className="order-card">
+                          <div className="order-header">
+                            <span className="order-id">Order #{order.id}</span>
+                            <span className="order-status">{order.status}</span>
+                          </div>
+                          <div className="order-date">{new Date(order.date).toLocaleDateString()}</div>
+                          <div className="order-items">
+                            {order.items.map(item => (
+                              <div key={item.medicine.id} className="order-item">
+                                <span>{item.medicine.name} x {item.quantity}</span>
+                                <span>Rs. {item.medicine.price * item.quantity}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="order-total">Total: Rs. {order.total}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <button className="logout-btn" onClick={logout}>Logout</button>
               </>
             ) : (
@@ -275,7 +303,7 @@ const AppContent = () => {
                   <span>Total:</span>
                   <span>Rs. {cartTotal}</span>
                 </div>
-                <button className="btn order-btn" onClick={() => { alert('Order placed!'); clearCart(); setShowCart(false); }}>Place Order</button>
+                <button className="btn order-btn" onClick={() => { addOrder(cart, cartTotal); clearCart(); setShowCart(false); alert('Order placed!'); }}>Place Order</button>
               </>
             )}
           </div>

@@ -88,7 +88,7 @@ const PharmacyDetail = ({ pharmacy, onClose }) => {
                   </div>
                 ))}
               </div>
-              <button className="btn order-btn" onClick={handleOrder}>Place Order</button>
+              {/* <button className="btn order-btn" onClick={handleOrder}>Place Order</button> */}
             </>
           )}
         </div>
