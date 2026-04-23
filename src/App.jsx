@@ -100,7 +100,7 @@ const AppContent = () => {
         
 
         <div className="nav-pills">
-          {['search', 'map', 'favorites'].map(tab => (
+          {['Nearby', 'map', 'favorites'].map(tab => (
             <button
               key={tab}
               className={`nav-item ${activeTab === tab ? 'active' : ''}`}
