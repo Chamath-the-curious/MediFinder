@@ -97,16 +97,7 @@ const AppContent = () => {
           />
         </div>
 
-        <div className="filters">
-          {categories.map(cat => (
-            <button 
-              key={cat}
-              className={`filter-chip ${cat === 'All' ? 'active' : ''}`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+        
 
         <div className="nav-pills">
           {['search', 'map', 'favorites'].map(tab => (
