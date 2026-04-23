@@ -12,7 +12,7 @@ const DEFAULT_CENTER = [6.9271, 79.8612];
 const USER_LOCATION = [6.9250, 79.8550];
 
 const AppContent = () => {
-  const { favorites, cart, clearCart, cartTotal, login, logout, user, addOrder, orders } = useApp();
+  const { favorites, cart, clearCart, cartTotal, login, logout, user, addOrder, orders, reorder, updateQuantity, removeFromCart } = useApp();
   const [activeTab, setActiveTab] = useState('search');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPharmacy, setSelectedPharmacy] = useState(null);
@@ -292,10 +292,10 @@ const AppContent = () => {
                         <div className="cart-item-price">Rs. {item.medicine.price} x {item.quantity}</div>
                       </div>
                       <div className="cart-item-controls">
-                        <button onClick={() => {}}>-</button>
+                        <button onClick={() => updateQuantity(item.medicine.id, -1)}>-</button>
                         <span>{item.quantity}</span>
-                        <button onClick={() => {}}>+</button>
-                        <button className="remove-btn" onClick={() => {}}>×</button>
+                        <button onClick={() => updateQuantity(item.medicine.id, 1)}>+</button>
+                        <button className="remove-btn" onClick={() => removeFromCart(item.medicine.id)}>×</button>
                       </div>
                     </div>
                   ))}
