@@ -80,10 +80,10 @@ const AppContent = () => {
   };
 
   return (
-    <div className="app">
-      <Header onCartClick={() => setShowCart(true)} onLoginClick={() => setShowAuth(true)} />
+    <div className="app-container">
+        <Header onCartClick={() => setShowCart(true)} onLoginClick={() => setShowAuth(true)} />
 
-      <main className="main">
+        <main className="main">
         <div className="search-bar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="11" cy="11" r="8"/>
