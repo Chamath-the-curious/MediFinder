@@ -12,7 +12,7 @@ const DEFAULT_CENTER = [6.9271, 79.8612];
 const USER_LOCATION = [6.9250, 79.8550];
 
 const AppContent = () => {
-  const { favorites, cart, clearCart, cartTotal } = useApp();
+  const { favorites, cart, clearCart, cartTotal, login, user } = useApp();
   const [activeTab, setActiveTab] = useState('search');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPharmacy, setSelectedPharmacy] = useState(null);
@@ -20,6 +20,7 @@ const AppContent = () => {
   const [showAuth, setShowAuth] = useState(false);
   const [authMode, setAuthMode] = useState('login');
   const [authForm, setAuthForm] = useState({ email: '', password: '', name: '' });
+  const [authError, setAuthError] = useState('');
 
   const filteredPharmacies = useMemo(() => {
     return pharmacies.filter(p => {
@@ -51,37 +52,36 @@ const AppContent = () => {
 
   const handleAuth = (e) => {
     e.preventDefault();
+    setAuthError('');
     const savedUsers = JSON.parse(localStorage.getItem('medifinder_users') || '[]');
     
     if (authMode === 'register') {
       if (savedUsers.find(u => u.email === authForm.email)) {
-        alert('Email already registered');
+        setAuthError('Email already registered');
         return;
       }
       const newUser = { ...authForm, id: Date.now(), token: generateToken() };
       savedUsers.push(newUser);
       localStorage.setItem('medifinder_users', JSON.stringify(savedUsers));
-      localStorage.setItem('medifinder_token', newUser.token);
-      localStorage.setItem('medifinder_user', JSON.stringify(newUser));
-      setShowAuth(false);
-      alert('Registration successful! Please log in.');
       setAuthMode('login');
+      setAuthForm({ email: '', password: '', name: '' });
+      setAuthError('Registration successful! Please log in.');
     } else {
       const found = savedUsers.find(u => u.email === authForm.email && u.password === authForm.password);
       if (found) {
-        localStorage.setItem('medifinder_token', found.token);
-        localStorage.setItem('medifinder_user', JSON.stringify(found));
+        login(found);
         setShowAuth(false);
-        alert('Login successful!');
+        setAuthForm({ email: '', password: '', name: '' });
+        setAuthError('');
       } else {
-        alert('Invalid email or password');
+        setAuthError('Invalid email or password');
       }
     }
   };
 
   return (
     <div className="app">
-      <Header onCartClick={() => setShowCart(true)} />
+      <Header onCartClick={() => setShowCart(true)} onLoginClick={() => setShowAuth(true)} />
 
       <main className="main">
         <div className="search-bar">
@@ -195,6 +195,7 @@ const AppContent = () => {
                 </svg>
               </button>
             </div>
+            {authError && <div className="auth-error">{authError}</div>}
             <form className="auth-form" onSubmit={handleAuth}>
               {authMode === 'register' && (
                 <input
