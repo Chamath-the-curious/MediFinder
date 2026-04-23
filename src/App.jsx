@@ -12,7 +12,7 @@ const DEFAULT_CENTER = [6.9271, 79.8612];
 const USER_LOCATION = [6.9250, 79.8550];
 
 const AppContent = () => {
-  const { favorites, cart, clearCart, cartTotal, login, user } = useApp();
+  const { favorites, cart, clearCart, cartTotal, login, logout, user } = useApp();
   const [activeTab, setActiveTab] = useState('search');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPharmacy, setSelectedPharmacy] = useState(null);
@@ -179,6 +179,7 @@ const AppContent = () => {
                   <p>{profileAddress || 'No address saved'}</p>
                 </div>
                 <button className="btn" onClick={openAddressModal}>Update Address</button>
+                <button className="logout-btn" onClick={logout}>Logout</button>
               </>
             ) : (
               <div className="login-prompt">

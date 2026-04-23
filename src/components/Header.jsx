@@ -1,8 +1,7 @@
 import { useApp } from '../context/AppContext';
-import { useState } from 'react';
 
 const Header = ({ onCartClick, onLoginClick }) => {
-  const { user, logout, cartCount } = useApp();
+  const { user, cartCount } = useApp();
 
   return (
     <header className="header">
@@ -13,12 +12,7 @@ const Header = ({ onCartClick, onLoginClick }) => {
         MediFinder
       </div>
       <div className="header-actions">
-        {user ? (
-          <>
-            {/* <span className="user-name">Welcome, {user.name}</span> */}
-            <button className="logout-btn" onClick={logout}>Logout</button>
-          </>
-        ) : (
+        {!user && (
           <button className="login-btn" onClick={onLoginClick}>Login</button>
         )}
         <button className="cart-btn" onClick={onCartClick}>
@@ -26,7 +20,6 @@ const Header = ({ onCartClick, onLoginClick }) => {
             <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
           </svg>
-         {/* ({cartCount}) */}
         </button>
       </div>
     </header>
